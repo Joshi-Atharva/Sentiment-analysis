@@ -1,3 +1,4 @@
+
 class extract_bin:
     def __init__(self, file_path = "sentiment labelled sentences/amazon_cells_labelled.txt"):
 
@@ -12,6 +13,7 @@ class extract_bin:
             "Negative": 0
         }
         line_ctr = 0
+        lines_list = []
         # Read the file and process each line
         with open(file_path, "r") as file:
             for line in file:
@@ -22,8 +24,13 @@ class extract_bin:
                 
                 # Split the sentence and sentiment
                 parts = line.rsplit(' ', 1)  # Split at the last space
-                print(parts[0], ':', parts[1], f'line: {line_ctr}')
-                sentence, sentiment = parts[0], parts[1]
+                
+                try:
+                    sentence, sentiment = parts[0], parts[1]
+                except:
+                    sentence = parts[0]
+                    sentiment = -1
+                    lines_list.append(line_ctr)
                 
                 # Append the sentence and corresponding label
                 inputs.append(sentence)
@@ -31,3 +38,4 @@ class extract_bin:
 
         self.inputs = inputs
         self.labels = labels
+        self.lines_list = lines_list
