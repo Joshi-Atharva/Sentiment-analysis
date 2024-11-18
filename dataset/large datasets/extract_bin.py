@@ -6,12 +6,6 @@ class extract_bin:
         inputs = []
         labels = []
 
-        # Mapping sentiment to labels
-        sentiment_map = {
-            "Positive": 1,
-            "Neutral": 0.5,
-            "Negative": 0
-        }
         line_ctr = 0
         lines_list = []
         # Read the file and process each line
@@ -20,17 +14,9 @@ class extract_bin:
                 line_ctr = line_ctr + 1
                 line = line.strip()  # Remove any leading/trailing whitespace
                 if not line:
-                    continue  # Skip empty lines
+                    continue  # Skip empty lines            
                 
-                # Split the sentence and sentiment
-                parts = line.rsplit(' ', 1)  # Split at the last space
-                
-                try:
-                    sentence, sentiment = parts[0], parts[1]
-                except:
-                    sentence = parts[0]
-                    sentiment = -1
-                    lines_list.append(line_ctr)
+                sentence, sentiment = line[:-1], int(line[-1])
                 
                 # Append the sentence and corresponding label
                 inputs.append(sentence)
@@ -39,3 +25,13 @@ class extract_bin:
         self.inputs = inputs
         self.labels = labels
         self.lines_list = lines_list
+
+class split:
+    def __init__(self, inputs, labels, train_size):
+        if( train_size > len(inputs)-1 ):
+            train_size = int(len(inputs)*0.9)
+        
+        self.train_set_inputs = inputs[:train_size]
+        self.train_set_labels = labels[:train_size]
+        self.test_set_inputs = inputs[train_size:]
+        self.test_set_labels = labels[train_size:]
